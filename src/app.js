@@ -5,15 +5,17 @@ const express = require('express')
 const config = require('../config')
 const { error, success } =require('./utils/responses.handler')
 const db = require('./utils/database')
+
 //? Router Imports
 const userRouter = require('./users/users.router')
+const postLogin = require('./auth/auth.services')
 
 //? Initial Configs
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
-//? Database Configs
 
+//? Database Configs
 db.authenticate()
     .then(() => console.log('Database Authenticated'))
     .catch(err => console.log(err))
@@ -34,6 +36,7 @@ app.get('/', (req, res) => {
     })
 })
 
+app.use('/api/v1/auth/login', postLogin)
 app.use('/api/v1/users', userRouter)
 
 //? 404 Error Handler
